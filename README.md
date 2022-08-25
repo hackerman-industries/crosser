@@ -8,6 +8,8 @@ This can cause a delay to a car journey, as you have to wait for the trains to p
 
 This application is designed to inform the user of when the crossing will be open and shut, and based on the train data make a recommendation to the driver on whether to travel over the crossing or detour around it.
 
+#### Diagram
+
 Norbury Crossing
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    ↓
 HAZ ---- MDL ---- DSL
