@@ -5,7 +5,6 @@ import time
 import requests
 from requests.auth import HTTPBasicAuth
 from model.journey import Journey
-from model.crossing import Crossing
 
 # Train data sourced from RealTrainTimes API
 USER = "rttapi_mpvii"
@@ -54,15 +53,6 @@ def get_journeys(start_pos, end_pos, journey_date=DATE):
         auth=HTTPBasicAuth(USER, PASS)
     ).json()['services']
 
-    # Clean arrival data
-    # Data in the past is very scuffed for whatever reason
-    # Needs investigating, sometimes the 'arrival_data' will show services
-    # that are not from the correct station.
-    # Other times the arrival/outbound data will be completely off.
-    # This is recorded around a day of train strikes, so not sure how much impact that's had.
-    # Or it could be that actual times are being updated for one station, and not another
-
-    # This step cleans some of those situations up, but it needs to be figured out.
     logging.info("Cleaning arrival data")
     service_ids = []
 
@@ -73,7 +63,7 @@ def get_journeys(start_pos, end_pos, journey_date=DATE):
 
     journeys = []
 
-    # Parse API data into a reusable object
+    # Parse API data into journey objects
     for i in range(len(outbound_data)):
         journeys.append(Journey(
             start_pos,
@@ -86,7 +76,7 @@ def get_journeys(start_pos, end_pos, journey_date=DATE):
     return journeys
 
 
-def get_all_journeys(services=SERVICES, journey_date=DATE):
+def get_all_journeys(services=None, journey_date=DATE):
     """
     Returns information on train journeys between stations to another for a given day.
 
@@ -97,6 +87,9 @@ def get_all_journeys(services=SERVICES, journey_date=DATE):
     Returns:
         list: A list of journey objects.
     """
+    if services is None:
+        services = SERVICES
+
     logging.info(f"Getting all journeys for {services}")
     journeys = []
 

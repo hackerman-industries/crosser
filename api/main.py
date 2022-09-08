@@ -10,11 +10,11 @@ def get_crossing_events(time):
     journeys = get_all_journeys(SERVICES, DATE)
 
     for journey in journeys:
-        crossing_times = crossing.calculate_journey_crossing_time(journey)
+        crossing_times = crossing.get_journey_crossing_times(journey)
         
-        if crossing_times[0] <= time <= crossing_times[1]:
+        if crossing_times["closure_time"] <= time <= crossing_times["opening_time"]:
             print(f"Journey from {journey.origin} to {journey.destination} \
-will close the crossing at {crossing_times[0]} and re-open at {crossing_times[1]}")
+will close the crossing at {crossing_times['closure_time']} and re-open at {crossing_times['opening_time']}")
 
 # Testing
 get_crossing_events(1432)
