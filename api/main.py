@@ -1,34 +1,21 @@
-from requests.auth import HTTPBasicAuth
-from datetime import date
-import requests
+from model.crossing import Crossing
+from model.journey import Journey
+from journey_utils import get_all_journeys, SERVICES, DATE
 
-# Train Data SOurced from Real Train TImes API
-username = "rttapi_mpvii"
-password = "f63e45c3ffd06e42cd5d77f5b371be72497172fb"
+def get_crossing_events(time):
+    """
+    """
+    crossing = Crossing("HAZ", 4, 2, 3)
 
-# url = "https://api.rtt.io/api/v1/json/search/MDL/to/HAZ"
+    journeys = get_all_journeys(SERVICES, DATE)
 
-# Get Today's dat in YYYY/MM/DD
-# today = date.today().strftime("%Y/%m/%d")
-today = "2022/06/24/0815"
+    for journey in journeys:
+        crossing_times = crossing.get_journey_crossing_times(journey)
+        
+        if crossing_times["closure_time"] <= time <= crossing_times["opening_time"]:
+            print(f"Journey from {journey.origin} to {journey.destination} \
+will close the crossing at {crossing_times['closure_time']} and re-open at {crossing_times['opening_time']}")
 
-endpoint = "https://api.rtt.io/api/v1"
-
-call = f"/json/search/MDL/to/MAN/{today}"
-
-
-
-response = requests.get(endpoint+call, auth=HTTPBasicAuth(username, password))
-journeys = response.json()['services']
-
-for journey in journeys:
-    print(journey['locationDetail']['realtimeDeparture'])
-
-
-
-call2 = f"/json/search/HAZ/to/MAN/{today}"
-response2 = requests.get(endpoint+call2, auth=HTTPBasicAuth(username, password))
-print(response2.content)
-
-
+# Testing
+get_crossing_events(1432)
 
